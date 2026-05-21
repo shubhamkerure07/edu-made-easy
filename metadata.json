@@ -1,0 +1,6 @@
+{
+  "name": "EduClass",
+  "description": "An interactive online tuition class app for hosting live video sessions, tracking progress, providing assignments, and booking premium 1-on-1 tutoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
