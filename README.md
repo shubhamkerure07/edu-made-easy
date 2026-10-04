@@ -29,6 +29,20 @@ Even though EduClass is a native Kotlin Android application, the repository incl
 
 ---
 
+## 📸 Visual Interface Showcase
+
+<div align="center">
+
+| 🎥 Live Virtual Classroom | 📝 Coursework & Submissions |
+| :---: | :---: |
+| <img src="docs/screenshots/01_live_virtual_classroom.png" width="100%" alt="Live Virtual Classroom" /> | <img src="docs/screenshots/02_assignment_pipeline.png" width="100%" alt="Assignment Pipeline" /> |
+| **🧠 Timed MCQ Quizzes** | **💎 1-on-1 Mentorship Booking** |
+| <img src="docs/screenshots/03_timed_mcq_quiz.png" width="100%" alt="Timed Quiz" /> | <img src="docs/screenshots/04_premium_mentorship.png" width="100%" alt="1-on-1 Tutoring Booking" /> |
+
+</div>
+
+---
+
 ## 📖 Overview
 
 **EduClass (Edu Made Easy)** is a high-performance native Android application engineered with **Kotlin** and **Jetpack Compose**. It bridges the gap between students and educators by providing an all-in-one digital classroom experience. 
