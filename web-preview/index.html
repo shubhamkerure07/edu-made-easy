@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduClass (Edu Made Easy) — Interactive Android Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #e0e7ff;
+      --bg: #0b0f19;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #090d16;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .top-toolbar {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 12px 20px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+    }
+
+    .top-toolbar h1 {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-kotlin {
+      background: #7f52ff;
+      color: white;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .badge-room {
+      background: #0284c7;
+      color: white;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .device-switcher {
+      display: flex;
+      gap: 8px;
+    }
+
+    .switch-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .switch-btn.active, .switch-btn:hover {
+      background: #4f46e5;
+      color: white;
+      border-color: #4f46e5;
+    }
+
+    /* Device frame */
+    .device-container {
+      width: 100%;
+      max-width: 440px;
+      background: #f8fafc;
+      color: var(--text);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 8px #1e293b;
+      display: flex;
+      flex-direction: column;
+      height: 840px;
+      position: relative;
+      transition: max-width 0.3s ease;
+    }
+
+    .device-container.tablet-mode {
+      max-width: 760px;
+    }
+
+    /* Android Status bar */
+    .status-bar {
+      height: 36px;
+      background: #1e1b4b;
+      color: #c7d2fe;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* App Header */
+    .app-header {
+      background: #1e1b4b;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: #4f46e5;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .role-toggle {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+    }
+
+    .app-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Cards */
+    .mat-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .live-hero-card {
+      background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Bottom Nav Bar */
+    .bottom-nav {
+      height: 64px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item.active {
+      color: #4f46e5;
+      background: #e0e7ff;
+    }
+
+    .btn-action {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-action:hover { background: #4338ca; }
+
+    /* Quiz components */
+    .quiz-option {
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .quiz-option:hover {
+      border-color: #c7d2fe;
+      background: #f5f3ff;
+    }
+
+    .quiz-option.selected {
+      border-color: #4f46e5;
+      background: #e0e7ff;
+      color: #312e81;
+    }
+
+    .quiz-option.correct {
+      border-color: #10b981;
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    /* Live video simulated stream */
+    .simulated-stream {
+      background: #0f172a;
+      border-radius: 16px;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .live-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top toolbar -->
+  <div class="top-toolbar">
+    <h1>
+      <span>📚 EduClass (Edu Made Easy) Android Preview</span>
+      <span class="badge-kotlin">Kotlin 2.0</span>
+      <span class="badge-room">Room Database</span>
+    </h1>
+    <div class="device-switcher">
+      <button class="switch-btn active" onclick="setMode('phone')">📱 Mobile View</button>
+      <button class="switch-btn" onclick="setMode('tablet')">💻 Wide View</button>
+    </div>
+  </div>
+
+  <!-- Device frame -->
+  <div class="device-container" id="device">
+    <div class="status-bar">
+      <span>11:15</span>
+      <span>4G 📶 92% 🔋</span>
+    </div>
+
+    <div class="app-header">
+      <div class="app-title-box">
+        <div class="logo-badge">🎓</div>
+        <div>
+          <h2 style="font-size:16px; font-weight:800;">EduClass</h2>
+          <span style="font-size:10px; color:#c7d2fe; font-weight:700;">Live Tuition Network</span>
+        </div>
+      </div>
+      <button class="role-toggle" id="roleBtn" onclick="toggleRole()">Role: Student 🔄</button>
+    </div>
+
+    <div class="app-body" id="app-content">
+      <!-- Injected dynamically by tab switcher -->
+    </div>
+
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchTab('sessions')">
+        <span class="icon">🎥</span>
+        <span>Live Classes</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('assignments')">
+        <span class="icon">📝</span>
+        <span>Assignments</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('quiz')">
+        <span class="icon">🧠</span>
+        <span>Quizzes</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('premium')">
+        <span class="icon">💎</span>
+        <span>1-on-1 Tutoring</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentTab = 'sessions';
+    let userRole = 'Student';
+    let isStreamActive = false;
+
+    let quizQuestion = {
+      question: 'Which algorithmic approach divides the problem into subproblems and combines solutions?',
+      options: ['Dynamic Programming', 'Divide and Conquer', 'Greedy Method', 'Branch and Bound'],
+      selected: null,
+      correct: 1,
+      submitted: false
+    };
+
+    let bookedSessions = [
+      { tutor: 'Dr. Ramesh Kumar', subject: 'Advanced Calculus', date: 'Oct 6, 2026', time: '04:00 PM' }
+    ];
+
+    function setMode(mode) {
+      const dev = document.getElementById('device');
+      const btns = document.querySelectorAll('.switch-btn');
+      btns.forEach(b => b.classList.remove('active'));
+      if (mode === 'tablet') {
+        dev.classList.add('tablet-mode');
+        btns[1].classList.add('active');
+      } else {
+        dev.classList.remove('tablet-mode');
+        btns[0].classList.add('active');
+      }
+    }
+
+    function toggleRole() {
+      userRole = userRole === 'Student' ? 'Instructor' : 'Student';
+      document.getElementById('roleBtn').innerText = `Role: ${userRole} 🔄`;
+      renderContent();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.nav-item').forEach((item, index) => {
+        const tabs = ['sessions', 'assignments', 'quiz', 'premium'];
+        if (tabs[index] === tab) item.classList.add('active');
+        else item.classList.remove('active');
+      });
+      renderContent();
+    }
+
+    function selectQuizOption(index) {
+      if (quizQuestion.submitted) return;
+      quizQuestion.selected = index;
+      renderContent();
+    }
+
+    function submitQuiz() {
+      if (quizQuestion.selected === null) return alert('Please pick an answer first!');
+      quizQuestion.submitted = true;
+      renderContent();
+    }
+
+    function resetQuiz() {
+      quizQuestion.selected = null;
+      quizQuestion.submitted = false;
+      renderContent();
+    }
+
+    function bookMentor(tutor, subject) {
+      bookedSessions.push({
+        tutor: tutor,
+        subject: subject,
+        date: 'Oct 8, 2026',
+        time: '05:30 PM'
+      });
+      alert(`🎉 1-on-1 Session booked successfully with ${tutor} for ${subject}!`);
+      renderContent();
+    }
+
+    function renderContent() {
+      const container = document.getElementById('app-content');
+
+      if (currentTab === 'sessions') {
+        container.innerHTML = `
+          <div class="live-hero-card">
+            <span style="background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; text-transform:uppercase;">Next Live Lecture</span>
+            <h3 style="font-size:18px; font-weight:800; margin-top:8px;">Design of Operating Systems (CS302)</h3>
+            <p style="font-size:12px; opacity:0.85; margin-top:4px;">Instructor: Dr. Savitha Rao • 42 Students Joined</p>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button class="btn-action" style="background:white; color:#4f46e5;" onclick="isStreamActive = !isStreamActive; renderContent();">
+                ${isStreamActive ? '⏹ Leave Classroom' : '▶ Join Live Stream'}
+              </button>
+            </div>
+          </div>
+
+          ${isStreamActive ? `
+            <div class="simulated-stream">
+              <div class="live-pill"><div class="live-dot"></div> LIVE CLASSROOM</div>
+              <span style="font-size:42px;">👩‍🏫</span>
+              <p style="font-size:13px; font-weight:700; margin-top:8px;">Virtual Lecture: Process Scheduling & Threads</p>
+              <span style="font-size:11px; opacity:0.75;">Audio/Video connected • 60 FPS HD</span>
+            </div>
+          ` : ''}
+
+          <div class="mat-card">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Upcoming Scheduled Lectures</h4>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#f8fafc; border-radius:10px;">
+                <div>
+                  <h5 style="font-size:13px; font-weight:700;">Algorithms & Complexity</h5>
+                  <p style="font-size:11px; color:#64748b;">Today at 02:00 PM • Prof. Rajesh</p>
+                </div>
+                <span style="font-size:11px; font-weight:800; color:#4f46e5;">In 2h 45m</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#f8fafc; border-radius:10px;">
+                <div>
+                  <h5 style="font-size:13px; font-weight:700;">Database Normalization & SQL</h5>
+                  <p style="font-size:11px; color:#64748b;">Tomorrow at 10:00 AM • Prof. Ananya</p>
+                </div>
+                <span style="font-size:11px; font-weight:800; color:#64748b;">Tomorrow</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      else if (currentTab === 'assignments') {
+        container.innerHTML = `
+          <div class="mat-card">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Active Coursework & Submissions</h4>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="border-left:4px solid #ef4444; padding:10px; background:#f8fafc; border-radius:10px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <h5 style="font-size:13px; font-weight:700;">Assignment 3: Dijkstra Algorithm Analysis</h5>
+                  <span style="font-size:10px; font-weight:800; color:#ef4444; background:#fee2e2; padding:2px 6px; border-radius:4px;">DUE TODAY</span>
+                </div>
+                <p style="font-size:11px; color:#64748b; margin:6px 0;">Submit PDF report with asymptotic complexity charts.</p>
+                <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="alert('Submission modal opened!')">Upload PDF</button>
+              </div>
+
+              <div style="border-left:4px solid #10b981; padding:10px; background:#f8fafc; border-radius:10px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <h5 style="font-size:13px; font-weight:700;">Assignment 2: Semaphore Synchronization</h5>
+                  <span style="font-size:10px; font-weight:800; color:#10b981; background:#dcfce7; padding:2px 6px; border-radius:4px;">GRADED: 9.5/10</span>
+                </div>
+                <p style="font-size:11px; color:#64748b; margin-top:4px;">Feedback: "Excellent handling of race conditions."</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      else if (currentTab === 'quiz') {
+        const isAnswered = quizQuestion.submitted;
+        const isCorrect = quizQuestion.selected === quizQuestion.correct;
+
+        container.innerHTML = `
+          <div class="mat-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span style="font-size:11px; font-weight:800; color:#4f46e5;">QUIZ #4 — ALGORITHM CONCEPTS</span>
+              <span style="font-size:11px; font-weight:700; color:#64748b;">⏱️ 02:45 left</span>
+            </div>
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:16px;">${quizQuestion.question}</h4>
+            
+            ${quizQuestion.options.map((opt, i) => {
+              let cls = 'quiz-option';
+              if (quizQuestion.selected === i) cls += ' selected';
+              if (isAnswered && i === quizQuestion.correct) cls += ' correct';
+              return `<div class="${cls}" onclick="selectQuizOption(${i})">${String.fromCharCode(65+i)}. ${opt}</div>`;
+            }).join('')}
+
+            ${isAnswered ? `
+              <div style="margin-top:14px; padding:10px; border-radius:10px; background:${isCorrect ? '#dcfce7' : '#fee2e2'}; color:${isCorrect ? '#15803d' : '#b91c1c'}; font-size:12px; font-weight:700;">
+                ${isCorrect ? '🎉 Correct Answer! Divide and Conquer splits problems recursively.' : '❌ Incorrect. The correct approach is Divide and Conquer.'}
+              </div>
+              <button class="btn-action" style="width:100%; margin-top:12px;" onclick="resetQuiz()">Try Another Question</button>
+            ` : `
+              <button class="btn-action" style="width:100%; margin-top:12px;" onclick="submitQuiz()">Submit Answer</button>
+            `}
+          </div>
+        `;
+      }
+      else if (currentTab === 'premium') {
+        container.innerHTML = `
+          <div class="mat-card">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:6px;">Book 1-on-1 Premium Mentorship</h4>
+            <p style="font-size:11px; color:#64748b; margin-bottom:14px;">Private sessions for doubt resolution, exam preparation, and project guidance.</p>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="padding:12px; background:#f8fafc; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h5 style="font-size:13px; font-weight:700;">Dr. Ramesh Kumar</h5>
+                  <p style="font-size:11px; color:#64748b;">Ph.D. in Computer Science • 12 yrs exp</p>
+                  <span style="font-size:10px; font-weight:800; color:#10b981;">⭐️ 4.9 (180+ sessions)</span>
+                </div>
+                <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="bookMentor('Dr. Ramesh Kumar', 'Algorithms & OS')">Book Slot</button>
+              </div>
+
+              <div style="padding:12px; background:#f8fafc; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h5 style="font-size:13px; font-weight:700;">Prof. Shalini V.</h5>
+                  <p style="font-size:11px; color:#64748b;">M.Tech Mechatronics • Embedded Systems</p>
+                  <span style="font-size:10px; font-weight:800; color:#10b981;">⭐️ 4.8 (95+ sessions)</span>
+                </div>
+                <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="bookMentor('Prof. Shalini V.', 'Embedded C & Robotics')">Book Slot</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mat-card">
+            <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Your Scheduled Private Sessions (${bookedSessions.length})</h4>
+            ${bookedSessions.map(b => `
+              <div style="padding:10px; background:#f8fafc; border-radius:10px; font-size:11px; margin-bottom:6px;">
+                <span style="font-weight:700; color:#0f172a;">${b.subject}</span> with <span style="font-weight:700; color:#4f46e5;">${b.tutor}</span>
+                <p style="color:#64748b; margin-top:2px;">📅 ${b.date} at 🕒 ${b.time}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    renderContent();
+  </script>
+</body>
+</html>

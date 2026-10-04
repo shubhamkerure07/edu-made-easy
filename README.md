@@ -10,7 +10,20 @@
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
 [![Room Database](https://img.shields.io/badge/Room_DB-SQLite-0284C7?style=for-the-badge&logo=sqlite&logoColor=white)](https://developer.android.com/training/data-storage/room)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI_Tutor-8E75C2?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubhamkerure07%2Fedu-made-easy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](LICENSE)
+
+</div>
+
+---
+
+## 🌐 Instant Live Web Simulator & Vercel Deploy
+
+Even though EduClass is a native Kotlin Android application, the repository includes a responsive **interactive web simulator** (`web-preview/`) preconfigured with [`vercel.json`](vercel.json) for instant cloud deployment:
+
+<div align="center">
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubhamkerure07%2Fedu-made-easy)
 
 </div>
 
